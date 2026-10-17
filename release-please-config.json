@@ -4,7 +4,14 @@
     ".": {
       "release-type": "python",
       "package-name": "agentic-delivery",
-      "include-component-in-tag": false
+      "include-component-in-tag": false,
+      "extra-files": [
+        {
+          "type": "toml",
+          "path": "uv.lock",
+          "jsonpath": "$.package[?(@.name.value=='agentic-delivery')].version"
+        }
+      ]
     }
   }
 }
