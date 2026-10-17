@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+
+# Secrets
+.env
+.env.*
+
+# Product-repo mirrors (see repos.yaml)
+workspace/
+
+# Generated material
+outputs/*
+!outputs/.gitkeep
+
+# Claude Code local overrides
+.claude/settings.local.json
+.DS_Store

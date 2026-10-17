@@ -1,8 +1,15 @@
-# Delivery hub — agent guide
+# agentic-delivery — agent guide
 
-This repo is a **delivery hub**: the central, versioned home for a project's context. It holds the
-knowledge base, PRD, backlog and decisions, plus links to the product repositories and generated delivery
-material. Project specifics (name, client, which tools are in use) live in `project.yaml`.
+This repo has two roles:
+
+1. It is the **`agentic-delivery` package**: the `ad` CLI in `src/delivery/`, which client hubs
+   install as a pinned dependency.
+2. It is the **Copier template** in `template/`, the thin layer each client hub is generated from.
+
+It is also a working hub for its own product (PRD and backlog in `product/`). A hub is the central,
+versioned home for a project's context. It holds the knowledge base, PRD, backlog and decisions, plus
+links to the product repositories and generated delivery material. Project specifics (name, client,
+which tools are in use) live in `project.yaml`.
 
 ## Layout
 
@@ -13,6 +20,8 @@ material. Project specifics (name, client, which tools are in use) live in `proj
 - `docs/adr/`: architecture decision records. Add one for any non-trivial design decision.
 - `src/delivery/`: the `ad` CLI (ports and adapters). `tests/` mirrors it.
 - `outputs/`: generated material (gitignored).
+- `template/`: what client hubs get (Copier `_subdirectory`; `*.jinja` files are rendered). Its
+  `CLAUDE.md` is the operating guide for hub users and agents. Keep it in step with this file.
 - `workspace/`: product-repo mirrors (gitignored).
 
 ## Commands
@@ -43,5 +52,7 @@ material. Project specifics (name, client, which tools are in use) live in `proj
 
 - Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`…), enforced by a commit-msg hook.
 - Python 3.12, ruff, mypy strict, pytest. Coverage must be at least 80%.
-- Template files: `X.jinja` renders into client instances as `X`. Keep the hub's own `X` and the
-  `.jinja` version in step (see `copier.yml`). Run `uv run poe smoke` after changing the template.
+- After changing `template/` or `copier.yml`, run `uv run poe smoke`. It renders several stacks and
+  checks that each installs this checkout's tooling and passes `ad doctor` and its hooks.
+- Tooling changes reach client hubs through a release tag, not `copier update`. Keep the CLI
+  backwards compatible with `project.yaml` files rendered by older template versions.

@@ -1,41 +1,16 @@
 # Copier template for a client delivery hub.
-#   new instance:   uvx copier copy gh:<org>/agentic-delivery ./acme-hub
+#   new instance:   uvx copier copy gh:danielmschaves/agentic-delivery ./acme-hub
 #   pull upgrades:  uvx copier update   (inside the instance)
 #
-# The repo root is both the template and a working hub (it dogfoods itself).
-# Files that differ between the two exist twice: `X` (the hub's own, excluded
-# below) and `X.jinja` (rendered into instances as `X`).
+# Instances get only the thin hub layer in `template/` (config, agent setup, KB/product scaffolding,
+# CI). The `ad` tooling is a dependency pinned in the instance's pyproject (see ADR-0001).
 
 _min_copier_version: "9.4"
+_subdirectory: template
 _templates_suffix: .jinja
 _answers_file: .copier-answers.yml
 
 _exclude:
-  - copier.yml
-  - .git
-  - .venv
-  - "**/__pycache__"
-  - .*_cache
-  - .coverage
-  - uv.lock
-  - workspace
-  - outputs/*
-  - "!outputs/.gitkeep"
-  # The hub's own instance files (rendered from *.jinja instead)
-  - project.yaml
-  - .mcp.json
-  - README.md
-  - CHANGELOG.md
-  - .release-please-manifest.json
-  # The hub's own content
-  - product/*
-  - "!product/features"
-  - kb/*
-  - "!kb/sources"
-  # Template-only machinery
-  - scripts/template-smoke.sh
-  - .github/workflows/template.yml
-  # CI provider
   - "{{ '.github' if ci_provider != 'github' else '__keep__' }}"
   - "{{ 'azure-pipelines.yml' if ci_provider != 'azure' else '__keep__' }}"
 
@@ -52,7 +27,7 @@ client:
 project_key:
   type: str
   help: Short project key (2-10 chars, uppercase, e.g. ACME)
-  default: "{{ project_name | upper | replace(' ', '') | truncate(6, True, '') }}"
+  default: "{{ (project_name | upper | regex_replace('[^A-Z0-9]', '') ~ 'HUB')[:6] }}"
   validator: >-
     {% if not (project_key | regex_search('^[A-Z][A-Z0-9]{1,9}$')) %}Must match ^[A-Z][A-Z0-9]{1,9}${% endif %}
 
@@ -104,3 +79,10 @@ ci_provider:
     GitHub Actions: github
     Azure Pipelines: azure
   default: "{{ 'azure' if tracker == 'ado' else 'github' }}"
+
+tooling_source:
+  type: str
+  help: Where to install the agentic-delivery tooling from (PEP 508 direct reference)
+  # Tracks main until the first tagged release; then pin a tag and let Dependabot bump it.
+  default: git+https://github.com/danielmschaves/agentic-delivery@main
+  when: false

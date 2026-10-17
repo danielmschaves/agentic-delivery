@@ -10,7 +10,7 @@ Generated from the [agentic-delivery](https://github.com/danielmschaves/agentic-
 ```bash
 uv sync                       # install tooling
 uv run pre-commit install --install-hooks -t pre-commit -t commit-msg
-cp .env.example .env          # fill in credentials for enabled adapters
+cp example.env .env            # fill in credentials for enabled adapters
 uv run ad doctor              # verify config, adapters and credentials
 claude                        # work with the agent (see CLAUDE.md)
 ```

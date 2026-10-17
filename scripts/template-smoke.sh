@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Render the copier template for representative stacks and run the checks inside each render.
+# Render the copier template for representative stacks and check each render works:
+# tooling installs from this checkout, `ad doctor` passes, and the instance's hooks pass.
 set -euo pipefail
 
 src="$(cd "$(dirname "$0")/.." && pwd)"
@@ -11,14 +12,18 @@ render() {
   local dest="$out/$name"
   echo "::group::render $name"
   uv run copier copy --vcs-ref=HEAD --defaults --quiet \
-    --data project_name="Smoke $name" --data client=smoke "$@" "$src" "$dest"
+    --data project_name="Smoke $name" --data client=smoke \
+    --data tooling_source="file://$src" "$@" "$src" "$dest"
   (
     cd "$dest"
+    unset VIRTUAL_ENV
+    test -f project.yaml -a -f .mcp.json -a -f .copier-answers.yml -a -f CLAUDE.md
+    python3 -c "import json; json.load(open('.mcp.json'))"
     git init -q -b main
     uv sync --quiet
-    uv run poe check
     uv run ad doctor
-    python3 -c "import json,sys; json.load(open('.mcp.json'))"
+    git add -A
+    uv run pre-commit run --all-files
   )
   echo "::endgroup::"
 }

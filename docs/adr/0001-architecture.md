@@ -28,10 +28,18 @@ but owned by the team. It has to:
    repeatable, auditable, bulk, in CI, or two-way.
 5. **Content is plain files in git.** The KB and product docs are Markdown/YAML, reviewed through PRs.
    Generated outputs are pure functions of that content.
-6. **Copier template, with the root doubling as a working hub.** Files that differ between the template
-   and the hub exist twice: `X` (the hub's own, excluded) and `X.jinja` (rendered into instances).
-   `copier update` carries template improvements into client instances. A CI smoke job renders several
-   stacks and runs the checks inside each render.
+6. **Tooling is a package; the template is thin.** This repo is the `agentic-delivery` package
+   and a working hub. `template/` (Copier `_subdirectory`) holds only the instance layer:
+   `project.yaml`, `.mcp.json`, `CLAUDE.md`, `.claude/`, KB/product scaffolding and CI.
+   - Instances depend on the tooling through a pinned direct reference
+     (`agentic-delivery @ git+…@vX.Y.Z`). Tooling upgrades arrive as dependency bumps
+     (Dependabot); template upgrades arrive through `copier update`.
+   - Client repos never carry forked tooling code.
+   - A CI smoke job renders several stacks, installs the local checkout into each, and runs
+     `ad doctor` and the instance hooks.
+   - We first tried making the repo root both template and hub, with `X` / `X.jinja` pairs. It was
+     rejected because Copier applies `_exclude` to rendered paths, so excluding the hub's own `X`
+     also dropped the rendered one.
 7. **Product repos are linked in a hybrid way** (implemented in a later phase).
    - `repos.yaml` declares each repo as `remote` (API/MCP reads) or `mirror` (a blobless, sparse clone
      in a gitignored `workspace/`).
@@ -42,6 +50,8 @@ but owned by the team. It has to:
 ## Consequences
 
 - Most integrations work on day one through MCP. Coded adapters are written only when they pay off.
-- Two copies of a few root files (`project.yaml`, `.mcp.json`, `README.md`) must be kept in step. The
-  smoke test catches render breakage, not drift in meaning.
+- The root `CLAUDE.md` and `template/CLAUDE.md` overlap and must be kept in step by review.
+- The CLI must stay backwards compatible with config rendered by older template versions.
+- Private tooling repos need read access from instance CI (deploy key or token) to install the
+  package.
 - Client data stays in the client's instance repo, so access is managed with normal repo permissions.

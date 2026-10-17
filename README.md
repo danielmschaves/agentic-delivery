@@ -5,7 +5,9 @@ for a project's context. Claude Code drives it, and it has its own tools and int
 Confluence, Azure DevOps, Google Workspace, Microsoft 365, Zoom / Teams). It links to the repositories
 where the product lives, and it produces delivery material: roadmaps, CSV exports and documents.
 
-This repo is both the **Copier template** and a working hub. Its own PRD and backlog live in `product/`.
+This repo is the **`agentic-delivery` package** (the `ad` CLI) and the **Copier template** in
+`template/`. Each client hub gets the thin template layer and installs the tooling as a pinned
+dependency. This repo is also a working hub: its own PRD and backlog live in `product/`.
 
 ## Create a client hub
 
@@ -14,7 +16,9 @@ uvx copier copy gh:danielmschaves/agentic-delivery ./acme-hub
 cd acme-hub && git init && uv sync && uv run ad doctor
 ```
 
-Pull later template improvements into a hub with `uvx copier update`.
+- Template improvements: run `uvx copier update` in the hub.
+- Tooling improvements: bump the `agentic-delivery` tag in the hub's `pyproject.toml`; Dependabot
+  opens these PRs.
 
 ## Develop the template
 
@@ -22,7 +26,7 @@ Pull later template improvements into a hub with `uvx copier update`.
 uv sync
 uv run pre-commit install --install-hooks
 uv run poe check     # ruff, mypy --strict, pytest (≥80% coverage)
-uv run poe smoke     # render the template for several stacks and run checks inside each
+uv run poe smoke     # render template stacks; check each
 uv run ad doctor
 ```
 

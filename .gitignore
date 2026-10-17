@@ -12,7 +12,6 @@ dist/
 # Secrets
 .env
 .env.*
-!.env.example
 
 # Hub working areas
 # Product-repo mirrors (see repos.yaml)

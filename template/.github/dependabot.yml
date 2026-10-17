@@ -1,0 +1,9 @@
+version: 2
+updates:
+  # Picks up new agentic-delivery tooling releases as well as other deps.
+  - package-ecosystem: uv
+    directory: /
+    schedule: { interval: weekly }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
