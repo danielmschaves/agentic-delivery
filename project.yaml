@@ -1,0 +1,13 @@
+# Hub configuration. Validated by `ad doctor`.
+# Adapter values: a coded adapter name, "mcp" (agent uses an MCP server), or "none".
+project:
+  name: Agentic Delivery
+  client: internal
+  key: AD
+
+integrations:
+  tracker: { adapter: mcp }      # GitHub Issues via MCP for the template's own backlog
+  storage: { adapter: local_fs, options: { root: kb/sources } }
+  repos: { adapter: mcp }
+  mail: { adapter: mcp }
+  calendar: { adapter: mcp }

@@ -1,0 +1,106 @@
+# Copier template for a client delivery hub.
+#   new instance:   uvx copier copy gh:<org>/agentic-delivery ./acme-hub
+#   pull upgrades:  uvx copier update   (inside the instance)
+#
+# The repo root is both the template and a working hub (it dogfoods itself).
+# Files that differ between the two exist twice: `X` (the hub's own, excluded
+# below) and `X.jinja` (rendered into instances as `X`).
+
+_min_copier_version: "9.4"
+_templates_suffix: .jinja
+_answers_file: .copier-answers.yml
+
+_exclude:
+  - copier.yml
+  - .git
+  - .venv
+  - "**/__pycache__"
+  - .*_cache
+  - .coverage
+  - uv.lock
+  - workspace
+  - outputs/*
+  - "!outputs/.gitkeep"
+  # The hub's own instance files (rendered from *.jinja instead)
+  - project.yaml
+  - .mcp.json
+  - README.md
+  - CHANGELOG.md
+  - .release-please-manifest.json
+  # The hub's own content
+  - product/*
+  - "!product/features"
+  - kb/*
+  - "!kb/sources"
+  # Template-only machinery
+  - scripts/template-smoke.sh
+  - .github/workflows/template.yml
+  # CI provider
+  - "{{ '.github' if ci_provider != 'github' else '__keep__' }}"
+  - "{{ 'azure-pipelines.yml' if ci_provider != 'azure' else '__keep__' }}"
+
+project_name:
+  type: str
+  help: Project name
+  validator: "{% if not project_name.strip() %}Required{% endif %}"
+
+client:
+  type: str
+  help: Client / organisation name
+  default: internal
+
+project_key:
+  type: str
+  help: Short project key (2-10 chars, uppercase, e.g. ACME)
+  default: "{{ project_name | upper | replace(' ', '') | truncate(6, True, '') }}"
+  validator: >-
+    {% if not (project_key | regex_search('^[A-Z][A-Z0-9]{1,9}$')) %}Must match ^[A-Z][A-Z0-9]{1,9}${% endif %}
+
+tracker:
+  type: str
+  help: Work tracker
+  choices:
+    Jira: jira
+    Azure DevOps Boards: ado
+    None: none
+  default: jira
+
+wiki:
+  type: str
+  help: Wiki / docs space
+  choices:
+    Confluence: confluence
+    Azure DevOps Wiki: ado
+    None: none
+  default: "{{ 'ado' if tracker == 'ado' else 'confluence' if tracker == 'jira' else 'none' }}"
+
+workspace_suite:
+  type: str
+  help: Mail, calendar and file storage suite
+  choices:
+    Google Workspace: google
+    Microsoft 365: microsoft
+    None (local files only): none
+  default: google
+
+meetings:
+  type: str
+  help: Meeting transcripts source
+  choices:
+    Zoom: zoom
+    Microsoft Teams: teams
+    None: none
+  default: "{{ 'teams' if workspace_suite == 'microsoft' else 'zoom' }}"
+
+ado_org:
+  type: str
+  help: Azure DevOps organisation name
+  when: "{{ tracker == 'ado' or wiki == 'ado' }}"
+
+ci_provider:
+  type: str
+  help: CI provider for this hub repo
+  choices:
+    GitHub Actions: github
+    Azure Pipelines: azure
+  default: "{{ 'azure' if tracker == 'ado' else 'github' }}"

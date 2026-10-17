@@ -1,0 +1,25 @@
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Hub working areas
+# Product-repo mirrors (see repos.yaml)
+workspace/
+outputs/*
+!outputs/.gitkeep
+
+# Claude Code local overrides
+.claude/settings.local.json
+.DS_Store

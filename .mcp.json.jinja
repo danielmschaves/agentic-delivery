@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+{%- set servers = [] %}
+{%- if tracker == 'jira' or wiki == 'confluence' %}
+{%- set _ = servers.append('    "atlassian": {\n      "type": "http",\n      "url": "https://mcp.atlassian.com/v1/mcp"\n    }') %}
+{%- endif %}
+{%- if tracker == 'ado' or wiki == 'ado' %}
+{%- set _ = servers.append('    "azure-devops": {\n      "type": "stdio",\n      "command": "npx",\n      "args": ["-y", "@azure-devops/mcp", "' ~ ado_org ~ '"]\n    }') %}
+{%- endif %}
+{{ servers | join(',\n') }}
+  }
+}

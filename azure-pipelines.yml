@@ -1,0 +1,22 @@
+# CI for hubs hosted in Azure DevOps (emitted when ci_provider = azure).
+trigger:
+  branches: { include: [main] }
+pr:
+  branches: { include: ["*"] }
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+  - script: curl -LsSf https://astral.sh/uv/install.sh | sh
+    displayName: Install uv
+  - script: echo "##vso[task.prependpath]$HOME/.local/bin"
+    displayName: Add uv to PATH
+  - script: uv sync --locked
+    displayName: Sync
+  - script: uv run poe check
+    displayName: Lint, typecheck, test
+  - script: uv run ad doctor
+    displayName: Doctor

@@ -1,0 +1,19 @@
+# Hub configuration. Validated by `ad doctor`.
+# Adapter values: a coded adapter name, "mcp" (agent uses an MCP server), or "none".
+project:
+  name: {{ project_name }}
+  client: {{ client }}
+  key: {{ project_key }}
+
+integrations:
+  tracker: { adapter: {{ 'none' if tracker == 'none' else 'mcp' }} }  # {{ tracker }}
+  wiki: { adapter: {{ 'none' if wiki == 'none' else 'mcp' }} }  # {{ wiki }}
+  storage: { adapter: local_fs, options: { root: kb/sources } }
+  repos: { adapter: mcp }
+{%- if workspace_suite != 'none' %}
+  mail: { adapter: mcp }  # {{ workspace_suite }}
+  calendar: { adapter: mcp }  # {{ workspace_suite }}
+{%- endif %}
+{%- if meetings != 'none' %}
+  meetings: { adapter: mcp }  # {{ meetings }}
+{%- endif %}
