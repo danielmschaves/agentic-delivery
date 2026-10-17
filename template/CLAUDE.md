@@ -20,8 +20,17 @@ repo's own files (this guide, `.claude/`, CI) come from the agentic-delivery Cop
 ## Commands
 
 - `uv run ad doctor`: check config, adapters, credentials.
+- `uv run ad new feature|decision|risk "<title>"`: scaffold content with the next free id.
+- `uv run ad list feature [--status defined]`: list content.
+- `uv run ad validate`: check content schemas, ids and cross-references (also runs in hooks and CI).
+- `uv run ad prd init`: create `product/prd.md` from the template.
 - `uv run ad --help`: list all hub tools.
 - `uvx copier update`: pull template improvements. Review the diff before committing.
+
+## Skills
+
+- `/prd`: create or revise the PRD and break it into features.
+- `/feature <id>`: define one feature until it's ready to build (stories, acceptance criteria).
 
 ## MCP or coded adapter
 

@@ -30,6 +30,9 @@ uv run poe smoke     # render template stacks; check each
 uv run ad doctor
 ```
 
+The product definition for this template is in [product/prd.md](product/prd.md), with features
+in `product/features/`.
+
 ## Architecture
 
 The architecture is recorded in [ADR-0001](docs/adr/0001-architecture.md). In short:
@@ -42,8 +45,8 @@ The architecture is recorded in [ADR-0001](docs/adr/0001-architecture.md). In sh
 | Phase | Scope                                                                 | Status |
 |-------|-----------------------------------------------------------------------|--------|
 | 0     | Scaffold: uv, CLI + `ad doctor`, lint/type/test, CI, copier template  | done   |
-| 1     | PRD and feature definition (`/prd`, `/feature`), canonical models     | next   |
-| 2     | Product-repo linking: `repos.yaml` / `repos.lock`, sync digests       |        |
+| 1     | PRD and feature definition (`/prd`, `/feature`), canonical models     | done   |
+| 2     | Product-repo linking: `repos.yaml` / `repos.lock`, sync digests       | next   |
 | 3     | Trackers: Jira, ADO Boards (two-way sync); Confluence / ADO Wiki      |        |
 | 4     | Outputs: HTML roadmap, CSV, Markdown                                  |        |
 | 5     | Knowledge ingestion: Drive / OneDrive, mail, calendar, transcripts    |        |
