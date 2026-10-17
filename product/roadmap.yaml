@@ -1,0 +1,15 @@
+# Milestones referenced by product/features/*.md (`milestone: M1`). Validated by `ad validate`.
+milestones:
+  - id: M1
+    title: "Foundation: scaffold, PRD and feature definition"
+    status: done
+  - id: M2
+    title: "Product context: linked product repositories"
+  - id: M3
+    title: "Delivery tools: tracker sync and wiki publishing"
+  - id: M4
+    title: "Outputs: roadmaps and exports"
+  - id: M5
+    title: "Knowledge: document and communication ingestion"
+  - id: M6
+    title: "Platform: MCP server, scheduled syncs, instance upgrades"

@@ -28,3 +28,9 @@ repos:
         language: system
         files: ^(project\.yaml|\.mcp\.json)$
         pass_filenames: false
+      - id: ad-validate
+        name: ad validate
+        entry: uv run ad validate
+        language: system
+        files: ^(product|kb)/
+        pass_filenames: false

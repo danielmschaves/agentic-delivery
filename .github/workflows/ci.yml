@@ -20,6 +20,6 @@ jobs:
       - run: uv sync --locked
       - run: uv run poe check
       - run: uv run ad doctor
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: uv run ad validate
+      # Hooks include gitleaks, markdownlint and the template/root agent-file sync check.
+      - run: SKIP=mypy,ruff,ruff-format uv run pre-commit run --all-files

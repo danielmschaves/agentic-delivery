@@ -42,3 +42,15 @@ repos:
         language: system
         files: ^project\.yaml$
         pass_filenames: false
+      - id: ad-validate
+        name: ad validate
+        entry: uv run ad validate
+        language: system
+        files: ^(product|kb)/
+        pass_filenames: false
+      - id: agent-files-sync
+        name: template and root agent files in sync
+        entry: scripts/sync-agent-files.sh --check
+        language: system
+        files: ^(template/)?\.claude/
+        pass_filenames: false

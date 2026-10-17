@@ -27,6 +27,10 @@ which tools are in use) live in `project.yaml`.
 ## Commands
 
 - `uv run ad doctor`: check config, adapters, credentials.
+- `uv run ad new feature|decision|risk "<title>"`: scaffold content with the next free id.
+- `uv run ad list feature [--status defined]`: list content.
+- `uv run ad validate`: check content schemas, ids and cross-references (also runs in hooks and CI).
+- `uv run ad prd init`: create `product/prd.md` from the template.
 - `uv run poe check`: lint, type check and tests. Run it before saying code work is done.
 - `uv run poe fmt`: auto-format and fix lint.
 - Add dependencies with `uv add <pkg>` (or `uv add --dev`). Never use pip.
@@ -52,6 +56,8 @@ which tools are in use) live in `project.yaml`.
 
 - Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`…), enforced by a commit-msg hook.
 - Python 3.12, ruff, mypy strict, pytest. Coverage must be at least 80%.
+- Skills and agents are authored in `template/.claude/` and copied to the root `.claude/` by
+  `scripts/sync-agent-files.sh`. A hook fails if the copies differ, so never edit the root copies.
 - After changing `template/` or `copier.yml`, run `uv run poe smoke`. It renders several stacks and
   checks that each installs this checkout's tooling and passes `ad doctor` and its hooks.
 - Tooling changes reach client hubs through a release tag, not `copier update`. Keep the CLI

@@ -20,7 +20,7 @@ render() {
     test -f project.yaml -a -f .mcp.json -a -f .copier-answers.yml -a -f CLAUDE.md
     python3 -c "import json; json.load(open('.mcp.json'))"
     git init -q -b main
-    uv sync --quiet
+    uv sync --quiet --reinstall-package agentic-delivery  # avoid stale cached builds of this checkout
     uv run ad doctor
     git add -A
     uv run pre-commit run --all-files

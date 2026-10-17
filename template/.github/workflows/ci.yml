@@ -19,4 +19,5 @@ jobs:
           enable-cache: true
       - run: uv sync --locked
       - run: uv run ad doctor
+      - run: uv run ad validate
       - run: uv run pre-commit run --all-files
