@@ -1,6 +1,6 @@
 [project]
 name = "agentic-delivery"
-version = "0.1.0"
+version = "0.2.0"
 description = "Agentic delivery hub: project context, integrations and outputs, driven by Claude Code."
 requires-python = ">=3.12"
 dependencies = [
